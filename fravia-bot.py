@@ -15,6 +15,18 @@ async def on_ready():
     print(bot.user.id)
     print('------')
 
+@bot.command(description='Decode opcodes to asm')
+async def d_opcodes(payload : str,arch : str):
+    """
+    Decode opcodes to asm
+    Ex: ?d_opcodes 5589E583EC0A686E2F7368682F2F626931C083C00B89E331D231D1CD80 x86
+    """
+    url = 'https://defuse.ca/online-x86-assembler.htm#disassembly2'
+    data = {'hexstring':payload,'arch':arch,'submit':'Disassemble'}
+    r = requests.post(url,data=data)
+    tree = html.fromstring(r.text)
+    await bot.say('```{}```'.format(''.join(tree.xpath('//*[@id="content"]/div[2]/div[4]/p/text()')).strip()))
+
 @bot.command(description='Search for an asm instruction Ex: ?asm inc')
 async def asm(asm_cmd : str):
     """Search for asm commands"""
