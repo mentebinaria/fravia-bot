@@ -1,5 +1,7 @@
 import discord
 import requests
+import feedparser
+from lxml import html
 from bs4 import BeautifulSoup
 from discord.ext import commands
 
@@ -13,9 +15,9 @@ async def on_ready():
     print(bot.user.id)
     print('------')
 
-@bot.command(description='Search for asm instructions')
+@bot.command(description='Search for an asm instruction Ex: ?asm inc')
 async def asm(asm_cmd : str):
-    """Search for asm instructions"""
+    """Search for asm commands"""
     url = 'http://faydoc.tripod.com/cpu/{}.htm'.format(asm_cmd.lower())
     r = requests.get(url)
     if r.status_code == 404:
@@ -26,4 +28,24 @@ async def asm(asm_cmd : str):
         await bot.say(cleantext.split('\n')[0])
         await bot.say(url)
 
-bot.run('API_KEY_HERE')
+@bot.command(description='Search for windows functions')
+async def winapi(win_function : str):
+    """Search for windows functions"""
+    url = 'https://social.msdn.microsoft.com/search/en-US/feed?query={}&format=RSS&theme=windows'.format(win_function.lower())
+    feed = feedparser.parse(url)
+    if feed['entries']:
+        url = feed['entries'][0]['link']
+        if 'library/windows/desktop' not in url:
+            await bot.say('Poh brother essa função existe não.')
+        else:
+            r = requests.get(url)
+            tree = html.fromstring(r.text)
+            await bot.say(''.join(tree.xpath('//*[@id="mainSection"]/p[1]/text()')))
+            msg = '''```c
+            {}```'''.format(tree.xpath('//*[@dir="ltr"]/div/pre/text()')[0])
+            await bot.say(msg)
+            await bot.say(url)
+    else:
+        await bot.say('Poh brother essa função existe não.')
+
+bot.run('API GOES HERE')
