@@ -15,6 +15,21 @@ async def on_ready():
     print(bot.user.id)
     print('------')
 
+@bot.command(description='Search for shellcodes on http://shell-storm.org.')
+async def shellcode(search : str):
+    """
+    Search for shellcodes on http://shell-storm.org, PLEASE USE THIS JUST IN PVT
+    Examples:
+    ?shellcode linux (search with single parameter)
+    ?shellcode linux|86|reverse (search with multiple parameters)
+    """
+    url = 'http://shell-storm.org/api/?s={}'.format(search.replace('|','*'))
+    r = requests.get(url)
+    for line in r.text.split('\n'):
+        line = line.split('::::')
+        if len(line) == 5:
+            await bot.say('%s - %s' % (line[2],line[4]))
+
 @bot.command(description='Decode opcodes to asm')
 async def d_opcodes(payload : str,arch : str):
     """
