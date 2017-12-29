@@ -1,6 +1,5 @@
 import os
 import discord
-import textwrap
 import requests
 import feedparser
 from lxml import html
