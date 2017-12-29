@@ -1,3 +1,4 @@
+import os
 import discord
 import requests
 import feedparser
@@ -18,7 +19,7 @@ async def on_ready():
 @bot.command(description='Search for shellcodes on http://shell-storm.org.')
 async def shellcode(search : str):
     """
-    Search for shellcodes on http://shell-storm.org, PLEASE USE THIS JUST IN PVT
+    Search for shellcodes on http://shell-storm.org
     Examples:
     ?shellcode linux (search with single parameter)
     ?shellcode linux|86|reverse (search with multiple parameters)
@@ -50,11 +51,13 @@ async def asm(asm_cmd : str):
     if r.status_code == 404:
         await bot.say('Poh brother essa instrução existe não.')
     else:
-        raw_html = r.text.split('Description</b><br>')[1].split('<table border=1 cellpadding=5 cellspacing=0>')[0]
-        cleantext = BeautifulSoup(raw_html, "lxml").text
-        await bot.say(cleantext.split('\n')[0])
-        await bot.say(url)
-
+        try:
+            raw_html = r.text.split('Description</b><br>')[1].split('<table border=1 cellpadding=5 cellspacing=0>')[0]
+            cleantext = BeautifulSoup(raw_html, "lxml").text
+            await bot.say(cleantext.split('\n')[0])
+            await bot.say(url)
+        except:
+            await bot.say('Brother ou eu fiz merda ou você fez merda, mas deu alguma coisa errada aqui.')
 @bot.command(description='Search for windows functions')
 async def winapi(win_function : str):
     """Search for windows functions"""
@@ -75,4 +78,4 @@ async def winapi(win_function : str):
     else:
         await bot.say('Poh brother essa função existe não.')
 
-bot.run('API GOES HERE')
+bot.run(os.environ["API_KEY"])
