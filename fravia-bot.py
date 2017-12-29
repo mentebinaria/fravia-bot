@@ -16,6 +16,26 @@ async def on_ready():
     print(bot.user.id)
     print('------')
 
+@bot.command(description='Search for syscalls on http://man7.org/')
+async def syscall(syscall_name : str):
+    """
+    Search for syscalls on http://man7.org/
+    Examples:
+    ?syscall read
+    """
+    url = 'http://man7.org/linux/man-pages/man2/{}.2.html'.format(syscall_name.lower())
+    r = requests.get(url)
+    if r.status_code != 404:
+        tree = html.fromstring(r.text)
+        code = '''```c
+        {}```'''.format(textwrap.dedent(''.join(tree.xpath('/html/body/pre[3]')[0].itertext())))
+        desc = ''.join(tree.xpath('/html/body/pre[4]')[0].itertext())
+        await bot.say(textwrap.dedent(desc))
+        await bot.say(code)
+        await bot.say(url)
+    else:
+        await bot.say('Poh brother essa syscall existe não.')
+
 @bot.command(description='Search for shellcodes on http://shell-storm.org.')
 async def shellcode(search : str):
     """
