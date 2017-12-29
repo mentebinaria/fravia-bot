@@ -30,9 +30,12 @@ async def syscall(syscall_name : str):
         tree = html.fromstring(r.text)
         code = '''```c
         {}```'''.format(textwrap.dedent(''.join(tree.xpath('/html/body/pre[3]')[0].itertext())))
-        desc = ''.join(tree.xpath('/html/body/pre[4]')[0].itertext())
-        await bot.say(textwrap.dedent(desc))
-        await bot.say(code)
+        desc = textwrap.dedent(''.join(tree.xpath('/html/body/pre[4]')[0].itertext()))
+        if len(desc) >= 2000:
+            await bot.say('Poh brother a descrição dessa syscall é muito grande, não consigo enviar, mas se liga que to mandando o link ai em baixo')
+        else:
+            await bot.say(desc)
+            await bot.say(code)
         await bot.say(url)
     else:
         await bot.say('Poh brother essa syscall existe não.')
@@ -79,6 +82,7 @@ async def asm(asm_cmd : str):
             await bot.say(url)
         except:
             await bot.say('Brother ou eu fiz merda ou você fez merda, mas deu alguma coisa errada aqui.')
+            
 @bot.command(description='Search for windows functions')
 async def winapi(win_function : str):
     """Search for windows functions"""
