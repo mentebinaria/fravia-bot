@@ -3,3 +3,4 @@ requests
 discord.py
 lxml
 feedparser
+pylint
