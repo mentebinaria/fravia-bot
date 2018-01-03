@@ -1,6 +1,7 @@
 import os
 import discord
 import requests
+import textwrap
 import feedparser
 from lxml import html
 from bs4 import BeautifulSoup
