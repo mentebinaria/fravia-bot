@@ -6,7 +6,7 @@ from lxml import html
 from bs4 import BeautifulSoup
 from discord.ext import commands
 
-description = '''Oi meu nome é Fravia, eu sou o bot aqui do MenteBinária, manda um ?help e eu te falo no que posso ajudar.'''
+description = '''Hi my name is Fravia I'm here to help you'''
 bot = commands.Bot(command_prefix='?', description=description)
 
 @bot.event
