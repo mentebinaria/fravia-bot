@@ -1,5 +1,5 @@
 import os
-import textwrap
+import textwra
 import requests
 import feedparser
 from lxml import html
