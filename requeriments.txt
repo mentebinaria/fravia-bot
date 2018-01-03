@@ -4,4 +4,3 @@ discord.py
 lxml
 feedparser
 pylint
-textwrap
